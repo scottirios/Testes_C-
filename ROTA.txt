@@ -1,0 +1,63 @@
+ROTA
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GestaodeRotas.classes
+{
+    public class Rota
+    {
+        public int Numero { get; set; }
+        public string Nome { get; set; }
+
+        public List<Parada> paradas = new List<Parada>();
+
+        public Rota(int numero, string nome)
+        {
+            Numero = numero;
+            Nome = nome;
+        }
+
+        public void AdicionarParada(Parada parada)
+        {
+            paradas.Add(parada);
+        }
+
+        public void RemoverParada(string nomeParada)
+        {
+
+            bool paradaEncontrada = false;
+
+            foreach (var parada in paradas)
+            {
+                if (parada.Nome == nomeParada)
+                {
+                    paradas.Remove(parada);
+                    paradaEncontrada = true;
+                    break;
+                }
+            }
+
+            if (!paradaEncontrada)
+            {
+                throw new InvalidDataException("Parada inexistente!");
+            }
+        }
+
+        public List<string> ListarParadas()
+        {
+            List<string> paradasFormatadas = new List<string>();
+
+            foreach (var parada in paradas)
+            {
+                paradasFormatadas.Add($"Nome: {parada.Nome}, Saída: {parada.HorarioSaida} - Chegada: {parada.HorarioChegada}");
+            }
+            return paradasFormatadas;
+        }
+
+
+    }
+}

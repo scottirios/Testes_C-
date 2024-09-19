@@ -1,0 +1,105 @@
+GERENCIADOR DE ROTAS
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GestaodeRotas.classes
+{
+    public class GerenciadorRotas
+    {
+        public List<Rota> rotas = new List<Rota>();
+
+
+        public GerenciadorRotas() { }
+
+        public void AdicionarRota(int numero, string nome)
+        {
+            foreach (var rota in rotas)
+            {
+                if (rota.Numero == numero)
+                {
+                    throw new InvalidOperationException("Rota já existente");
+                }
+            }
+            rotas.Add(new Rota(numero, nome));
+        }
+
+        public Rota BuscarRota(int numero)
+        {
+            foreach (Rota rota in rotas)
+            {
+                if (rota.Numero == numero)
+                {
+                    return rota;
+                }
+            }
+            return null;
+        }
+
+        public void RemoverRota(int numero)
+        {
+            foreach (Rota rota in rotas)
+            {
+                if (rota.Numero == numero)
+                {
+                    rotas.Remove(rota);
+                    break;
+                }
+                else
+                {
+                    throw new InvalidDataException("Rota inexistente!");
+                }
+            }
+        }
+
+        public void AtualizarNome(string nomeAntingo, string novoNome)
+        {
+            foreach (var rota in rotas)
+            {
+                if (rota.Nome == nomeAntingo)
+                {
+                    rota.Nome = novoNome;
+                    break;
+                }
+            }
+        }
+
+        public List<Rota> ListarRotas()
+        {
+            return rotas;
+        }
+
+        public bool VerificarConflitos()
+        {
+            foreach (var rota in rotas)
+            {
+                foreach (var rota2 in rotas.Where(r => r.Numero != rota.Numero))
+                {
+                    foreach (var parada in rota.paradas)
+                    {
+                        foreach (var parada2 in rota2.paradas)
+                        {
+                            if (parada.Nome == parada2.Nome)
+                            {
+                                bool horariosConflitantes =
+                                    (parada.HorarioChegada >= parada2.HorarioSaida && parada.HorarioChegada <= parada2.HorarioChegada) ||
+                                    (parada2.HorarioChegada >= parada.HorarioSaida && parada2.HorarioChegada <= parada.HorarioChegada);
+
+                                if (horariosConflitantes)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+    }
+}
